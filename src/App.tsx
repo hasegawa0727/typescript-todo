@@ -4,15 +4,11 @@ import logo from './logo.svg';
 import {v4 as uuidv4} from 'uuid'
 import './App.css';
 import TodoForm from './TodoForm';
-import {Status, Todo} from '../type';
+import {Status, Todo} from './type';
 import { isFunctionExpression } from 'typescript';
+import ShowTodo from './ShowTodo';
+import FilterTodo from './FilterTodo';
 
-
-const statusLabel: {[key in Status]: string} = {
-  pending: '未着手',
-  'in-progress': '進行中',
-  done: '完了'
-};
 
 
 function App() {
@@ -50,7 +46,7 @@ function App() {
   }
 
 
-  const handleEditTodo = (todo: Todo) => {
+  const handleEditButton = (todo: Todo) => {
     setIsEditing(true);
     setFormData({
       title: todo.title,
@@ -102,15 +98,10 @@ function App() {
 
   return (
     <div className="App">
-      <div>
-        <label htmlFor='filter'>ステータスで絞り込み</label>
-        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-          <option value="all">全て</option>
-          <option value="pending">未着手</option>
-          <option value="in-progress">進行中</option>
-          <option value="done">完了</option>
-        </select>
-      </div>
+      <FilterTodo
+        status={filterStatus}
+        onSelect={setFilterStatus}
+        />
 
       
       <h1>{isEditing ? "Update Todo" : "Create Todo"}</h1>
@@ -121,20 +112,11 @@ function App() {
         isEditing={isEditing}
       />
 
-
-    <ul className='todo-list'>
-      {filteredTodos.map((todo) => (
-        <li key={todo.id}
-        style={{color: todo.status === "done" ? "black" : "red"}}
-        className='todo-item'>
-          <strong>タイトル：　</strong>{todo.title} <br />
-          <strong>詳細：　</strong>{todo.detail}<br />
-          <strong>ステータス：　</strong>{statusLabel[todo.status]}
-          <button onClick={() => handleEditTodo(todo)}>Edit</button>
-          <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
-        </li>
-      ))}
-    </ul>
+      <ShowTodo
+        todos={filteredTodos}
+        onEdit={handleEditButton}
+        onDelete={handleDeleteTodo}
+      />
     </div>
   );
 }

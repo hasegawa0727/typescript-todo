@@ -1,5 +1,5 @@
 import React from 'react';
-import {Status, Todo} from '../type'
+import {Status, Todo} from './type'
 
 type TodoFormProps = {
     formData: {
